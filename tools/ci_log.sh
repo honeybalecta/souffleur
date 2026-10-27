@@ -14,7 +14,7 @@ cd "$dir" || exit 0
   for log in *.log; do
     [ -f "$log" ] || continue
     echo; echo "## $log"; echo '```'
-    grep -E "^e: |error:|ERROR|FAILURE|What went wrong|Could not|Execution failed|Exception|Traceback|✗" "$log" | grep -v "^> Task" | head -60 || true
+    grep -E "^e: |error:|ERROR|FAILURE|What went wrong|Could not|Execution failed|Exception|Traceback|✗|SHA-256|Signer" "$log" | grep -v "^> Task" | head -60 || true
     echo "----- letzte Zeilen -----"
     tail -60 "$log"
     echo '```'
