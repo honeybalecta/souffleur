@@ -724,6 +724,17 @@
     },
     toast,
     settings: () => JSON.stringify(settings),
+    /** Nächstes erwartetes Wort (für Probelauf und Tests). */
+    peek() {
+      if (!P.tracker || current.view !== "prompter") return null;
+      const T = P.doc.tokens, st = P.tracker.state();
+      let i = st.pos;
+      while (i < T.length && T[i].soft) i++;
+      if (i >= T.length) return { done: true };
+      let last = true;
+      for (let j = i + 1; j < T.length && T[j].part === T[i].part; j++) if (!T[j].soft) { last = false; break; }
+      return { done: false, word: T[i].lex, endOfPart: last, part: T[i].part };
+    },
   };
 
   // ───────────────────────── Start ─────────────────────────

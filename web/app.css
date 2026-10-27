@@ -71,9 +71,7 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .bar-actions { display: flex; gap: 8px; margin-left: auto; align-items: center; }
 .brand { display: flex; align-items: center; gap: 10px; }
 .brand h1 { font-size: 19px; font-weight: 700; letter-spacing: -.01em; margin: 0; }
-.brand-mark { width: 26px; height: 26px; stroke: none; fill: var(--fg); }
-.brand-mark .mark-accent { fill: var(--accent); }
-.brand-mark .mark-dim { fill: var(--muted); opacity: .6; }
+.brand-mark { width: 30px; height: 30px; stroke: none; box-shadow: 0 0 0 1px var(--line); border-radius: 7px; }
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;

@@ -36,7 +36,7 @@ tools/      Bibliotheken und Sprachmodell holen, Build-Logs
 
 Alles läuft über GitHub Actions; jede Änderung auf `main` baut neu und legt APK und Installer im Release `v<version.txt>` ab.
 
-- **Android-Signatur**: Secrets `ANDROID_KEYSTORE_B64`, `ANDROID_KEYSTORE_PASSWORD`, optional `ANDROID_KEY_ALIAS` (Standard `vorlesepult`). Ohne Secrets entsteht ein Testbuild mit Debug-Signatur.
+- **Android-Signatur**: Secrets `ANDROID_KEYSTORE_B64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` (Standard `souffleur`). Ohne Secrets entsteht ein Testbuild mit Debug-Signatur.
 - **Browser-Version**: Einstellungen › Pages › Source „GitHub Actions“ einschalten.
 - **Berichte**: Jeder Lauf legt Log, Selbsttest und Bildschirmfotos im Zweig `ci-log-test`, `ci-log-android` bzw. `ci-log-windows` ab.
 

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Drei Textzeilen, die mittlere in Rot: die Zeile, die gerade gesprochen wird -->
+<!-- Souffleurkasten: Kuppel am Bühnenrand, darin der rote Punkt -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
-    <path android:fillColor="#EDE7DA" android:pathData="M34,38 h40 a4,4 0 0 1 0,8 h-40 a4,4 0 0 1 0,-8 z"/>
-    <path android:fillColor="#E5402A" android:pathData="M34,51 h26 a4,4 0 0 1 0,8 h-26 a4,4 0 0 1 0,-8 z"/>
-    <path android:fillColor="#A9A397" android:pathData="M34,64 h33 a4,4 0 0 1 0,8 h-33 a4,4 0 0 1 0,-8 z"/>
+    <group android:scaleX="0.76" android:scaleY="0.76" android:pivotX="54" android:pivotY="58">
+        <path android:fillColor="#131312" android:pathData="M22,70 A32,32 0 0 1 86,70 Z"/>
+        <path android:fillColor="#EDE7DA" android:pathData="M41,70 A13,13 0 0 1 67,70 Z"/>
+        <path android:fillColor="#E5402A" android:pathData="M49,63.5 a5,5 0 1 0 10,0 a5,5 0 1 0 -10,0 z"/>
+        <path android:fillColor="#131312" android:pathData="M18.5,70 h71 a2.5,2.5 0 0 1 0,5 h-71 a2.5,2.5 0 0 1 0,-5 z"/>
+    </group>
 </vector>

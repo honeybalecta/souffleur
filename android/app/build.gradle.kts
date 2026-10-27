@@ -28,7 +28,7 @@ android {
             if (ks != null) {
                 storeFile = file(ks)
                 storePassword = providers.environmentVariable("SF_KEYSTORE_PASSWORD").get()
-                keyAlias = providers.environmentVariable("SF_KEY_ALIAS").getOrElse("vorlesepult")
+                keyAlias = providers.environmentVariable("SF_KEY_ALIAS").getOrElse("souffleur")
                 keyPassword = providers.environmentVariable("SF_KEY_PASSWORD").orNull
                     ?: providers.environmentVariable("SF_KEYSTORE_PASSWORD").get()
             }
