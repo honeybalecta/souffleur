@@ -1,0 +1,80 @@
+name: Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: test
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Abgleich-Logik
+        id: tracker
+        continue-on-error: true
+        run: mkdir -p test-out && node test/tracker.test.mjs 2>&1 | tee test-out/tracker.log
+
+      - name: Bibliotheken für die Oberfläche
+        run: npm install --no-audit --no-fund && node tools/vendor.mjs
+
+      - name: Sprachmodell zwischenspeichern
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/souffleur
+          key: vosk-model-small-de-0.15
+
+      - name: Sprachmodell und Werkzeuge
+        run: |
+          python tools/fetch_model.py build/model-de
+          sudo apt-get update -qq && sudo apt-get install -y -qq espeak-ng ffmpeg > /dev/null
+          pip install -q vosk==0.3.45 python-docx
+
+      - name: Oberfläche in Chrome
+        id: e2e
+        continue-on-error: true
+        run: |
+          python test/make_docx.py test-out/Testskript.docx
+          node test/e2e.mjs web test-out/bilder test-out/Testskript.docx 2>&1 | tee test-out/e2e.log
+
+      - name: Spracherkennung (espeak-ng → Vosk → Abgleich)
+        id: asr
+        continue-on-error: true
+        run: |
+          node test/asr_prepare.mjs test/fixtures/skript.txt test-out/asr
+          python test/asr_run.py build/model-de test-out/asr 2>&1 | tee test-out/asr.log
+          python test/asr_run.py build/model-de test-out/asr --frei 2>&1 | tee -a test-out/asr.log
+          node test/asr_check.mjs test/fixtures/skript.txt test-out/asr events-frei.json 0 | tee -a test-out/asr.log || true
+          node test/asr_check.mjs test/fixtures/skript.txt test-out/asr events.json 0.8 2>&1 | tee -a test-out/asr.log
+
+      - name: Bericht im Zweig ci-log-test ablegen
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp test-out/asr/report.md test-out/asr-bericht.md 2>/dev/null || true
+          rm -f test-out/asr/*.wav
+          bash tools/ci_log.sh test "tracker=${{ steps.tracker.outcome }} e2e=${{ steps.e2e.outcome }} asr=${{ steps.asr.outcome }}" test-out/tracker.log test-out/e2e.log test-out/asr.log test-out/asr-bericht.md test-out/bilder test-out/asr
+
+      - name: Ergebnis
+        if: always()
+        run: |
+          echo "Abgleich: ${{ steps.tracker.outcome }} · Oberfläche: ${{ steps.e2e.outcome }} · Spracherkennung: ${{ steps.asr.outcome }}"
+          [ "${{ steps.tracker.outcome }}" = success ] && [ "${{ steps.e2e.outcome }}" = success ] && [ "${{ steps.asr.outcome }}" = success ]

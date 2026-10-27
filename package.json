@@ -1,0 +1,16 @@
+{
+  "name": "souffleur",
+  "private": true,
+  "description": "Teleprompter, der mitliest: Bibliotheken für die Oberfläche (Word-Import, Schrift) und Tests",
+  "scripts": {
+    "vendor": "node tools/vendor.mjs",
+    "test": "node test/tracker.test.mjs"
+  },
+  "dependencies": {
+    "mammoth": "1.8.0",
+    "@fontsource-variable/inter": "5.1.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.50.0"
+  }
+}

@@ -1,0 +1,110 @@
+name: Android-App bauen
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["android/**", "web/**", "tools/**", "package.json", "version.txt", ".github/workflows/build-android.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-android
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      SF_VERSION_CODE: ${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version
+        run: echo "SF_VERSION=$(cat version.txt)" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.14.3"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Sprachmodell zwischenspeichern
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/souffleur
+          key: vosk-model-small-de-0.15
+
+      - name: Oberfläche und Sprachmodell einbauen
+        run: |
+          npm install --no-audit --no-fund
+          node tools/vendor.mjs
+          python3 tools/fetch_model.py build/model-de
+          A=android/app/src/main/assets
+          rm -rf "$A" && mkdir -p "$A"
+          cp -r web "$A/www"
+          cp -r build/model-de "$A/model-de"
+          du -sh "$A"/*
+
+      - name: Signaturschlüssel
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          KS_PW: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          if [ -n "$KS_B64" ]; then
+            echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
+            {
+              echo "SF_KEYSTORE=$RUNNER_TEMP/release.jks"
+              echo "SF_KEYSTORE_PASSWORD=$KS_PW"
+              echo "SF_KEY_ALIAS=${KS_ALIAS:-vorlesepult}"
+            } >> "$GITHUB_ENV"
+            echo "Signiere mit dem Schlüssel aus den Repository-Secrets."
+          else
+            echo "::warning::Kein Signaturschlüssel hinterlegt (Secrets ANDROID_KEYSTORE_B64 und ANDROID_KEYSTORE_PASSWORD) – Testbuild mit Debug-Signatur. Vor einem späteren Update mit echtem Schlüssel muss die App einmal deinstalliert werden."
+          fi
+
+      - name: APK bauen
+        run: gradle -p android --no-daemon --console=plain assembleRelease 2>&1 | tee build.log
+
+      - name: Build-Log im Zweig ci-log-android ablegen
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash tools/ci_log.sh android "${{ job.status }}" build.log
+
+      - name: APK bereitstellen
+        run: |
+          mkdir -p out
+          cp android/app/build/outputs/apk/release/*.apk "out/Souffleur-$SF_VERSION.apk"
+          ls -la out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Souffleur-Android
+          path: out/*.apk
+          compression-level: 0
+
+      - name: Als Release veröffentlichen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v$SF_VERSION"
+          for i in 1 2 3 4; do
+            if gh release view "$TAG" >/dev/null 2>&1; then
+              gh release upload "$TAG" out/*.apk --clobber && break
+            else
+              gh release create "$TAG" out/*.apk --title "Souffleur $SF_VERSION" \
+                --notes "Android-APK (Android 10 und neuer, ARM64) und Windows-Installer. Spracherkennung offline mit Vosk, deutsches Modell." && break
+            fi
+            sleep 15
+          done
