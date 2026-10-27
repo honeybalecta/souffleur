@@ -310,7 +310,7 @@
 
   function applySettings() {
     prompter.style.setProperty("--fs", settings.fontSize + "px");
-    prompter.style.setProperty("--measure", settings.measure + "em");
+    prompter.style.setProperty("--measure", settings.measure * settings.fontSize + "px");
     prompter.style.setProperty("--line-y", String(settings.line / 100));
     prompter.dataset.view = settings.view;
     prompter.dataset.bg = settings.bg;

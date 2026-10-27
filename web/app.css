@@ -159,7 +159,7 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 
 /* ── Teleprompter ── */
 .prompter {
-  --p-bg: var(--anthrazit); --p-fg: var(--creme); --p-dim: #A9A397; --p-cursor: var(--rot); --p-note: #A9A397;
+  --p-bg: var(--anthrazit); --p-fg: var(--creme); --p-dim: #858075; --p-cursor: var(--rot); --p-note: #A9A397;
   --p-hud: rgba(19, 19, 18, .82); --p-hud-fg: var(--creme); --p-hud-line: rgba(237, 231, 218, .16);
   --fs: 56px; --measure: 18em; --line-y: .33;
   background: var(--p-bg); color: var(--p-fg); overflow: hidden; touch-action: none; user-select: none;
@@ -167,10 +167,10 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 }
 .prompter[data-bg="schwarz"] { --p-bg: #000; --p-hud: rgba(0, 0, 0, .82); }
 .prompter[data-bg="creme"] {
-  --p-bg: var(--creme); --p-fg: var(--anthrazit); --p-dim: #5E584D; --p-cursor: var(--rot-hell); --p-note: #5E584D;
+  --p-bg: var(--creme); --p-fg: var(--anthrazit); --p-dim: #8A8478; --p-cursor: var(--rot-hell); --p-note: #5E584D;
   --p-hud: rgba(237, 231, 218, .9); --p-hud-fg: var(--anthrazit); --p-hud-line: rgba(19, 19, 18, .14); color-scheme: light;
 }
-.prompter[data-bg="green"] { --p-bg: #00B140; --p-fg: #fff; --p-dim: rgba(255, 255, 255, .62); --p-cursor: var(--anthrazit); --p-note: rgba(255, 255, 255, .75); }
+.prompter[data-bg="green"] { --p-bg: #00B140; --p-fg: #fff; --p-dim: rgba(255, 255, 255, .55); --p-cursor: var(--anthrazit); --p-note: rgba(255, 255, 255, .75); }
 
 .stage { position: absolute; inset: 0; overflow: hidden; }
 .prompter[data-mirror="h"] .stage { transform: scaleX(-1); }
@@ -263,8 +263,10 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 
 @media (max-width: 560px) {
   .where { display: none; }
-  .hud-top { gap: 6px; }
-  .hbtn { width: 40px; height: 40px; }
+  .hud-top { gap: 5px; flex-wrap: nowrap; }
+  .hbtn { width: 38px; height: 38px; }
+  .mic { height: 38px; padding: 0 10px; gap: 7px; }
+  .mic-level { display: none; }
   #pr-full { display: none; }
 }
 
