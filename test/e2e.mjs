@@ -29,6 +29,7 @@ async function session(name, opts, fn) {
   const ctx = await browser.newContext({ viewport: opts.viewport, deviceScaleFactor: opts.scale || 1, colorScheme: opts.scheme || "light", locale: "de-DE", hasTouch: !!opts.touch, isMobile: !!opts.mobile });
   // Keine Browser-Erkennung im Test: Wörter werden über SFDemo eingespielt
   await ctx.addInitScript(() => { window.webkitSpeechRecognition = undefined; window.SpeechRecognition = undefined; });
+  if (opts.init) await ctx.addInitScript(opts.init);
   const page = await ctx.newPage();
   page.on("pageerror", (e) => { R.errors.push(name + ": " + String(e).slice(0, 400)); console.log("SEITENFEHLER", String(e).slice(0, 300)); });
   page.on("console", (m) => { if (m.type() === "error") R.errors.push(name + " console: " + m.text().slice(0, 300)); });
@@ -155,6 +156,52 @@ await session("laptop", { viewport: { width: 1366, height: 800 }, scheme: "dark"
     step("Word-Import: Titel aus Dateiname", (await page.inputValue("#ed-title")) === "Testskript");
     await shot("05-word-import");
   }
+});
+
+// ── Tablet quer, wie die Android-App (Brücke SFNative nachgebildet): Ringlicht ──
+await session("tablet", {
+  viewport: { width: 1280, height: 800 }, scale: 1.5, touch: true,
+  init: () => {
+    window.__calls = [];
+    const log = (name) => (...a) => { window.__calls.push([name, ...a]); };
+    window.SFNative = { ready: log("ready"), start: log("start"), stop: log("stop"), pause: log("pause"),
+      setPrompter: log("setPrompter"), keepAwake: log("keepAwake"), setBrightness: log("setBrightness"), info: () => "{}" };
+  },
+}, async (page, shot) => {
+  const brightness = () => ev(page, () => window.__calls.filter((c) => c[0] === "setBrightness").map((c) => c[1]));
+  const bg = () => ev(page, () => getComputedStyle(document.querySelector("#v-prompter")).backgroundColor);
+  await page.goto(BASE);
+  await page.waitForSelector(".lib-item");
+  await page.click(".lib-item");
+  await page.click("#ed-start");
+  await page.waitForSelector("#v-prompter:not([hidden])");
+  await ev(page, () => window.SFSpeech({ type: "status", state: "listening" }));
+  step("Ringlicht aus: Systemhelligkeit", (await brightness()).every((v) => v === -1), await brightness());
+  await page.click("#pr-light");
+  await page.waitForTimeout(400);
+  const rect = await ev(page, () => { const r = document.querySelector("#stage").getBoundingClientRect(); return { l: r.left, t: r.top, r: innerWidth - r.right, b: innerHeight - r.bottom }; });
+  step("Ringlicht an: Rand leuchtet weiß", (await bg()) === "rgb(255, 255, 255)", await bg());
+  step("Ringlicht an: Textfenster ringsum gleich eingerückt", [rect.l, rect.t, rect.r, rect.b].every((v) => Math.abs(v - 112) <= 1), rect);
+  step("Ringlicht an: Helligkeit aufs Maximum", (await brightness()).at(-1) === 1, await brightness());
+  await say(page, ["lies", "diesen", "text"], false);
+  await page.waitForTimeout(3900);
+  await shot("01-ringlicht");
+  await page.touchscreen.tap(640, 400);
+  await page.click("#pr-settings");
+  await page.waitForSelector("#settings[open]");
+  await page.click('[data-setting="ringColor"] [data-value="warm"]');
+  await page.fill("#set-ring", "22");
+  await page.dispatchEvent("#set-ring", "input");
+  await shot("02-einstellungen");
+  await page.click("#settings .sheet-head button");
+  await page.waitForTimeout(3900);
+  step("Lichtfarbe warm", (await bg()) === "rgb(255, 201, 148)", await bg());
+  const left = await ev(page, () => document.querySelector("#stage").getBoundingClientRect().left);
+  step("Lichtrand breiter", Math.abs(left - 176) <= 1, left);
+  await shot("03-warm-breit");
+  await page.keyboard.press("Escape");
+  await page.waitForSelector("#v-editor:not([hidden])");
+  step("Nach dem Beenden: Systemhelligkeit", (await brightness()).at(-1) === -1, await brightness());
 });
 
 await browser.close();

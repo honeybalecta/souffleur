@@ -99,6 +99,7 @@
       <button class="hbtn" id="pr-smaller" aria-label="Schrift kleiner" title="Schrift kleiner (−)"><span class="aa small">A</span></button>
       <button class="hbtn" id="pr-bigger" aria-label="Schrift größer" title="Schrift größer (+)"><span class="aa">A</span></button>
       <button class="hbtn" id="pr-mirror" aria-label="Spiegeln" title="Spiegeln (M)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M9 7L4 12l5 5V7zM15 7l5 5-5 5V7z"/></svg></button>
+      <button class="hbtn" id="pr-light" aria-label="Ringlicht" title="Ringlicht (L)"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/></svg></button>
       <button class="hbtn" id="pr-full" aria-label="Vollbild" title="Vollbild (F)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
       <button class="hbtn" id="pr-settings" aria-label="Einstellungen" title="Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
     </div>
@@ -166,6 +167,31 @@
           <button type="button" role="radio" data-value="v">Kopfüber</button>
         </div>
       </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Ringlicht</legend>
+      <div class="row">
+        <span class="lbl" id="lbl-ring">Ringlicht</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-ring" data-setting="ring">
+          <button type="button" role="radio" data-value="aus">Aus</button>
+          <button type="button" role="radio" data-value="an">An</button>
+        </div>
+      </div>
+      <div class="row">
+        <label for="set-ring">Lichtrand</label>
+        <input id="set-ring" type="range" min="5" max="30" step="1">
+        <output id="out-ring" for="set-ring"></output>
+      </div>
+      <div class="row">
+        <span class="lbl" id="lbl-ringcolor">Lichtfarbe</span>
+        <div class="seg swatches" role="radiogroup" aria-labelledby="lbl-ringcolor" data-setting="ringColor">
+          <button type="button" role="radio" data-value="tag"><i class="sw sw-tag"></i>Tageslicht</button>
+          <button type="button" role="radio" data-value="neutral"><i class="sw sw-neutral"></i>Neutral</button>
+          <button type="button" role="radio" data-value="warm"><i class="sw sw-warm"></i>Warm</button>
+        </div>
+      </div>
+      <p class="set-note" id="ring-info"></p>
     </fieldset>
 
     <fieldset>

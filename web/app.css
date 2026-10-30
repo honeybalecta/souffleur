@@ -162,6 +162,7 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
   --p-bg: var(--anthrazit); --p-fg: var(--creme); --p-dim: #858075; --p-cursor: var(--rot); --p-note: #A9A397;
   --p-hud: rgba(19, 19, 18, .82); --p-hud-fg: var(--creme); --p-hud-line: rgba(237, 231, 218, .16);
   --fs: 56px; --measure: 18em; --line-y: .33;
+  --ring: 0px; --ring-r: 22px; --light: #FFFFFF;
   background: var(--p-bg); color: var(--p-fg); overflow: hidden; touch-action: none; user-select: none;
   color-scheme: dark;
 }
@@ -173,6 +174,12 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .prompter[data-bg="green"] { --p-bg: #00B140; --p-fg: #fff; --p-dim: rgba(255, 255, 255, .55); --p-cursor: var(--anthrazit); --p-note: rgba(255, 255, 255, .75); }
 
 .stage { position: absolute; inset: 0; overflow: hidden; }
+
+/* Ringlicht: der Bildschirmrand leuchtet, der Text steht in einem Fenster in der Mitte */
+.prompter[data-ring="an"] { background: var(--light); }
+.prompter[data-ring="an"] .stage { inset: var(--ring); border-radius: var(--ring-r); background: var(--p-bg); }
+.prompter[data-ring="an"] .progress { left: var(--ring); right: var(--ring); bottom: var(--ring); border-radius: 0 0 var(--ring-r) var(--ring-r); overflow: hidden; }
+.prompter[data-ring="an"] .heard { bottom: calc(var(--ring) + 14px); }
 .prompter[data-mirror="h"] .stage { transform: scaleX(-1); }
 .prompter[data-mirror="v"] .stage { transform: scaleY(-1); }
 .flow {
@@ -239,6 +246,7 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .where { font-size: 14px; opacity: .8; font-variant-numeric: tabular-nums; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .mic {
+  min-width: 0; flex: 0 1 auto;
   display: inline-flex; align-items: center; gap: 9px; height: 44px; padding: 0 14px 0 12px;
   border-radius: 22px; border: 1px solid var(--p-hud-line); background: transparent; color: inherit; cursor: pointer; font-weight: 600; font-size: 14px;
 }
@@ -250,6 +258,7 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .mic-level { width: 34px; height: 6px; border-radius: 3px; background: var(--p-hud-line); overflow: hidden; }
 .mic-level i { display: block; height: 100%; width: 0; background: currentColor; opacity: .8; transition: width .12s; }
 .mic:not([data-state="listening"]) .mic-level { display: none; }
+#mic-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @keyframes pulse { 50% { opacity: .35; } }
 
 .end {
@@ -290,10 +299,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .check { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; cursor: pointer; font-size: 14.5px; }
 .check input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--accent); }
 .check small { display: block; color: var(--muted); font-size: 13px; }
-.engine-info { color: var(--muted); font-size: 13px; margin: 0; }
+.engine-info, .set-note { color: var(--muted); font-size: 13px; margin: 0; }
 .keys { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--muted); }
 .keys b { color: var(--fg); font-weight: 600; }
 .swatches .sw { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--line); display: inline-block; }
+.sw-tag { background: #FFFFFF; } .sw-neutral { background: #FFE4CE; } .sw-warm { background: #FFC994; }
 .sw-anthrazit { background: var(--anthrazit); } .sw-schwarz { background: #000; } .sw-creme { background: var(--creme); } .sw-green { background: #00B140; }
 @media (max-width: 480px) {
   .row { grid-template-columns: 1fr 3.8em; }

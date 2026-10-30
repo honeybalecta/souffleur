@@ -48,6 +48,10 @@ class Bridge(private val act: MainActivity, private val app: App) : Speech.Liste
     @JavascriptInterface
     fun keepAwake(on: Boolean) = main.post { act.keepAwake(on) }
 
+    /** Ringlicht: 1 = volle Helligkeit, negativ = Helligkeit des Systems. */
+    @JavascriptInterface
+    fun setBrightness(level: Double) = main.post { act.setBrightness(level.toFloat()) }
+
     @JavascriptInterface
     fun info(): String = JSONObject().apply {
         put("app", "android"); put("version", act.versionName())

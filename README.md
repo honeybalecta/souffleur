@@ -2,8 +2,10 @@
 
 Teleprompter, der mitliest. Das Mikrofon hört zu, Souffleur markiert jedes gesprochene Wort und schaltet zum nächsten Teil, sobald ein Satz fertig ist. Die Spracherkennung läuft offline auf dem Gerät (Vosk, deutsches Modell); das Skript verlässt das Gerät nicht.
 
-- **Android**: APK aus den [Releases](../../releases) (Android 10 und neuer)
-- **Windows**: `Souffleur-Setup-….exe` aus den [Releases](../../releases), Installation ohne Adminrechte
+- **Android**: [Souffleur.apk](https://github.com/honeybalecta/souffleur/releases/latest/download/Souffleur.apk) (Android 10 und neuer)
+- **Windows**: [Souffleur-Setup.exe](https://github.com/honeybalecta/souffleur/releases/latest/download/Souffleur-Setup.exe), Installation ohne Adminrechte
+
+Beide Links zeigen immer auf die neueste Fassung.
 - **Browser**: optional über GitHub Pages; nutzt dort die Spracherkennung von Chrome oder Edge (online)
 
 ## Bedienung
@@ -19,6 +21,7 @@ Teleprompter, der mitliest. Das Mikrofon hört zu, Souffleur markiert jedes gesp
 | Mitlesen | Leertaste oder Mikrofon-Knopf schaltet an und aus |
 | Versprecher | Satz neu anfangen – Souffleur springt mit zurück |
 | Anzeige | Fließtext oder Satz für Satz, Schriftgröße, Zeilenbreite, Lesezeile, Spiegeln (Prompter-Glas), Hintergrund inkl. Greenscreen |
+| Ringlicht | Bildschirmrand leuchtet, Text steht im Fenster in der Mitte; Breite und Lichtfarbe (Tageslicht, neutral, warm) einstellbar, Taste L; auf Android volle Helligkeit |
 
 **Mitlesen im Detail:** Die Erkennung ist auf die Wörter des Skripts beschränkt (abschaltbar), das macht sie deutlich genauer. Zahlen, Abkürzungen und Kürzel müssen nicht erkannt werden. Bei einer Sprechpause schaltet Souffleur weiter, wenn vom Satz nur noch ein, zwei Wörter fehlen.
 

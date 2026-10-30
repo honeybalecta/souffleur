@@ -91,7 +91,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $tag = "v$env:SF_VERSION"
-          $file = (Get-ChildItem dist\Souffleur-Setup-*.exe | Select-Object -First 1).FullName
+          $src = (Get-ChildItem dist\Souffleur-Setup-*.exe | Select-Object -First 1).FullName
+          Copy-Item $src dist\Souffleur-Setup.exe -Force
+          $file = (Resolve-Path dist\Souffleur-Setup.exe).Path
           for ($i = 1; $i -le 4; $i++) {
             gh release view $tag 2>$null | Out-Null
             if ($LASTEXITCODE -eq 0) { gh release upload $tag $file --clobber }

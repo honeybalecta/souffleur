@@ -18,7 +18,10 @@
     fontSize: Math.round(clamp(Math.min(innerWidth, innerHeight * 1.6) / 16, 30, 72)),
     measure: 18, line: 33, view: "fluss", bg: "anthrazit", mirror: "aus",
     pause: true, grammar: true, heard: false, mic: "",
+    ring: "aus", ringSize: 14, ringColor: "tag",
   };
+  // Lichtfarben fürs Ringlicht: Tageslicht, neutral (~5000 K), warm (~3800 K)
+  const LIGHTS = { tag: "#FFFFFF", neutral: "#FFE4CE", warm: "#FFC994" };
   const settings = Object.assign({}, DEFAULTS, store.get("sf.settings", {}));
   const saveSettings = () => store.set("sf.settings", settings);
 
@@ -65,6 +68,7 @@
     current.view = view;
     if (native && native.setPrompter) try { native.setPrompter(view === "prompter"); } catch (e) { /* */ }
     if (Engine.host === "windows" && Engine.call) Engine.call("set_prompter", view === "prompter");
+    syncBrightness();
   }
 
   const current = { view: "library", script: null, doc: null };
@@ -305,6 +309,7 @@
     tracker: null, doc: null, partEls: [], wordEls: [], chapEls: [],
     shownPart: -1, shownPos: -1, cursorEl: null, ty: 0,
     listening: false, paused: false, engineState: "off", settleTimer: 0, hudTimer: 0, endShown: false, wake: null,
+    brightness: null,
   };
   const prompter = $("#v-prompter"), flow = $("#flow"), stage = $("#stage");
 
@@ -317,6 +322,19 @@
     prompter.dataset.mirror = settings.mirror;
     $("#pr-mirror").classList.toggle("on", settings.mirror !== "aus");
     $("#heard").hidden = !settings.heard || current.view !== "prompter";
+    prompter.dataset.ring = settings.ring;
+    prompter.style.setProperty("--ring", Math.round(Math.min(innerWidth, innerHeight) * settings.ringSize / 100) + "px");
+    prompter.style.setProperty("--light", LIGHTS[settings.ringColor] || LIGHTS.tag);
+    $("#pr-light").classList.toggle("on", settings.ring === "an");
+    syncBrightness();
+  }
+
+  /** Ringlicht in der Android-App: Bildschirmhelligkeit aufs Maximum, sonst Systemhelligkeit. */
+  function syncBrightness() {
+    const want = current.view === "prompter" && settings.ring === "an" ? 1 : -1;
+    if (want === P.brightness) return;
+    P.brightness = want;
+    if (native && native.setBrightness) try { native.setBrightness(want); } catch (e) { /* */ }
   }
 
   function startPrompter(partIndex) {
@@ -584,6 +602,10 @@
     settings.mirror = settings.mirror === "aus" ? "h" : "aus";
     saveSettings(); applySettings(); syncSettingsForm();
   });
+  $("#pr-light").addEventListener("click", () => {
+    settings.ring = settings.ring === "an" ? "aus" : "an";
+    saveSettings(); applySettings(); syncSettingsForm(); rescroll();
+  });
   $("#pr-full").addEventListener("click", toggleFullscreen);
   for (const b of $$(".hud button")) b.addEventListener("click", () => showHud());
 
@@ -597,7 +619,7 @@
     P.ty = NaN; render(true);
     requestAnimationFrame(() => prompter.classList.remove("no-anim"));
   }
-  addEventListener("resize", () => { if (current.view === "prompter") rescroll(); });
+  addEventListener("resize", () => { if (current.view === "prompter") { applySettings(); rescroll(); } });
 
   function toggleFullscreen() {
     if (Engine.host === "windows" && Engine.call) { Engine.call("fullscreen"); return; }
@@ -630,6 +652,7 @@
     if (k === "+" || k === "=") { changeFont(4); return; }
     if (k === "-") { changeFont(-4); return; }
     if (k === "m" || k === "M") { $("#pr-mirror").click(); return; }
+    if (k === "l" || k === "L") { $("#pr-light").click(); showHud(); return; }
     if (k === "r" || k === "R") { $("#pr-restart").click(); return; }
     if (k === "f" || k === "F") { toggleFullscreen(); return; }
   });
@@ -656,6 +679,9 @@
     $("#set-grammar").checked = settings.grammar;
     $("#set-grammar").closest("label").hidden = !Engine.grammar;
     $("#set-heard").checked = settings.heard;
+    $("#set-ring").value = settings.ringSize; $("#out-ring").textContent = settings.ringSize + " %";
+    $("#ring-info").textContent = "Der Text steht in einem Fenster in der Mitte, der Rand des Bildschirms leuchtet. " +
+      (Engine.host === "android" ? "Die App stellt dabei die Helligkeit auf das Maximum." : "Stell die Bildschirmhelligkeit dafür ganz hoch.");
     for (const g of $$("[data-setting]", dlg)) {
       for (const b of $$("button", g)) b.setAttribute("aria-checked", String(b.dataset.value === settings[g.dataset.setting]));
     }
@@ -668,6 +694,7 @@
   onRange("#set-font", "fontSize", "#out-font", " px");
   onRange("#set-measure", "measure", "#out-measure", " em");
   onRange("#set-line", "line", "#out-line", " %");
+  onRange("#set-ring", "ringSize", "#out-ring", " %");
   for (const g of $$("[data-setting]", dlg)) {
     g.addEventListener("click", (e) => {
       const b = e.target.closest("button[data-value]");

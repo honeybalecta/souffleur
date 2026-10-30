@@ -89,7 +89,7 @@ jobs:
       - name: APK bereitstellen
         run: |
           mkdir -p out
-          cp android/app/build/outputs/apk/release/*.apk "out/Souffleur-$SF_VERSION.apk"
+          cp android/app/build/outputs/apk/release/*.apk out/Souffleur.apk
           ls -la out
 
       - uses: actions/upload-artifact@v4

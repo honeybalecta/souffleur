@@ -158,6 +158,13 @@ class MainActivity : ComponentActivity() {
         ViewCompat.requestApplyInsets(root)
     }
 
+    /** Helligkeit nur für dieses Fenster; beim Verlassen der App gilt wieder die des Systems. */
+    fun setBrightness(level: Float) {
+        val lp = window.attributes
+        lp.screenBrightness = if (level < 0f) WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE else level.coerceIn(0.05f, 1f)
+        window.attributes = lp
+    }
+
     fun keepAwake(on: Boolean) {
         if (on) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
