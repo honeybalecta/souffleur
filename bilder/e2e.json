@@ -1,0 +1,139 @@
+{
+  "steps": [
+    {
+      "name": "Bibliothek mit Beispiel",
+      "ok": true
+    },
+    {
+      "name": "Editor zeigt Teilezahl",
+      "ok": true,
+      "info": "10 Teile · 3 Kapitel · ca. 1 Min"
+    },
+    {
+      "name": "Teleprompter beginnt bei Teil 1",
+      "ok": true
+    },
+    {
+      "name": "Ohne Erkennung: Hinweis „Nur von Hand“",
+      "ok": true,
+      "info": "Nur von Hand"
+    },
+    {
+      "name": "Gelesene Wörter markiert",
+      "ok": true,
+      "info": 3
+    },
+    {
+      "name": "Nach dem Satz weiter zu Teil 2",
+      "ok": true,
+      "info": 1
+    },
+    {
+      "name": "Sprechpause vor dem letzten Wort: weiter",
+      "ok": true,
+      "info": 2
+    },
+    {
+      "name": "Tippen rechts: nächster Teil",
+      "ok": true,
+      "info": 3
+    },
+    {
+      "name": "Tippen links: voriger Teil",
+      "ok": true,
+      "info": 2
+    },
+    {
+      "name": "Satz für Satz: höchstens drei Teile sichtbar",
+      "ok": true,
+      "info": 3
+    },
+    {
+      "name": "Zurück im Editor, Stand gemerkt",
+      "ok": true
+    },
+    {
+      "name": "Eigenes Skript: Teile erkannt",
+      "ok": true,
+      "info": 6
+    },
+    {
+      "name": "Pfeil rechts: nächster Teil",
+      "ok": true
+    },
+    {
+      "name": "Scrollrad: nächster Teil",
+      "ok": true,
+      "info": 2
+    },
+    {
+      "name": "Word-Import: Überschrift wird Kapitel",
+      "ok": true,
+      "info": "# Kapitel eins\nDas ist der erste Satz. Das ist der zweite Satz.\n[Hier Bild einblenden.]\nDanach geht es weiter, mit einem kursiven Wort"
+    },
+    {
+      "name": "Word-Import: kursiver Absatz wird Regieanweisung",
+      "ok": true,
+      "info": "# Kapitel eins\nDas ist der erste Satz. Das ist der zweite Satz.\n[Hier Bild einblenden.]\nDanach geht es weiter, mit einem kursiven Wort"
+    },
+    {
+      "name": "Word-Import: Titel aus Dateiname",
+      "ok": true
+    },
+    {
+      "name": "Ringlicht aus: Systemhelligkeit",
+      "ok": true,
+      "info": [
+        -1
+      ]
+    },
+    {
+      "name": "Ringlicht an: Rand leuchtet weiß",
+      "ok": true,
+      "info": "rgb(255, 255, 255)"
+    },
+    {
+      "name": "Ringlicht an: Textfenster ringsum gleich eingerückt",
+      "ok": true,
+      "info": {
+        "l": 112,
+        "t": 112,
+        "r": 112,
+        "b": 112
+      }
+    },
+    {
+      "name": "Ringlicht an: Helligkeit aufs Maximum",
+      "ok": true,
+      "info": [
+        -1,
+        1
+      ]
+    },
+    {
+      "name": "Lichtfarbe warm",
+      "ok": true,
+      "info": "rgb(255, 201, 148)"
+    },
+    {
+      "name": "Lichtrand breiter",
+      "ok": true,
+      "info": 176
+    },
+    {
+      "name": "Nach dem Beenden: Systemhelligkeit",
+      "ok": true,
+      "info": [
+        -1,
+        1,
+        -1
+      ]
+    },
+    {
+      "name": "Keine Seitenfehler",
+      "ok": true,
+      "info": []
+    }
+  ],
+  "errors": []
+}

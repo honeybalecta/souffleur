@@ -1,0 +1,26 @@
+✓ Bibliothek mit Beispiel
+✓ Editor zeigt Teilezahl  "10 Teile · 3 Kapitel · ca. 1 Min"
+✓ Teleprompter beginnt bei Teil 1
+✓ Ohne Erkennung: Hinweis „Nur von Hand“  "Nur von Hand"
+✓ Gelesene Wörter markiert  3
+✓ Nach dem Satz weiter zu Teil 2  1
+✓ Sprechpause vor dem letzten Wort: weiter  2
+✓ Tippen rechts: nächster Teil  3
+✓ Tippen links: voriger Teil  2
+✓ Satz für Satz: höchstens drei Teile sichtbar  3
+✓ Zurück im Editor, Stand gemerkt
+✓ Eigenes Skript: Teile erkannt  6
+✓ Pfeil rechts: nächster Teil
+✓ Scrollrad: nächster Teil  2
+✓ Word-Import: Überschrift wird Kapitel  "# Kapitel eins\nDas ist der erste Satz. Das ist der zweite Satz.\n[Hier Bild einblenden.]\nDanach geht es weiter, mit einem kursiven Wort"
+✓ Word-Import: kursiver Absatz wird Regieanweisung  "# Kapitel eins\nDas ist der erste Satz. Das ist der zweite Satz.\n[Hier Bild einblenden.]\nDanach geht es weiter, mit einem kursiven Wort"
+✓ Word-Import: Titel aus Dateiname
+✓ Ringlicht aus: Systemhelligkeit  [-1]
+✓ Ringlicht an: Rand leuchtet weiß  "rgb(255, 255, 255)"
+✓ Ringlicht an: Textfenster ringsum gleich eingerückt  {"l":112,"t":112,"r":112,"b":112}
+✓ Ringlicht an: Helligkeit aufs Maximum  [-1,1]
+✓ Lichtfarbe warm  "rgb(255, 201, 148)"
+✓ Lichtrand breiter  176
+✓ Nach dem Beenden: Systemhelligkeit  [-1,1,-1]
+✓ Keine Seitenfehler  []
+25 von 25 Schritten in Ordnung
